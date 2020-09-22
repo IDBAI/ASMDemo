@@ -1,7 +1,7 @@
 package com.yy.asm.demo.asm;
 
-import org.jetbrains.annotations.TestOnly;
 import org.junit.Test;
+import org.objectweb.asm.AnnotationVisitor;
 import org.objectweb.asm.ClassReader;
 import org.objectweb.asm.ClassVisitor;
 import org.objectweb.asm.ClassWriter;
@@ -92,12 +92,28 @@ public class MainEntry {
             super(api, methodVisitor, access, name, descriptor);
         }
 
+        boolean inject = false;
+
+        @Override
+        public AnnotationVisitor visitAnnotation(String descriptor, boolean visible) {
+
+            System.out.println(getName() +" -> "+descriptor);
+            if ("Lcom/yy/asm/demo/asm/TimeCost;".equals(descriptor)) {
+                inject = true;
+            }
+
+            return super.visitAnnotation(descriptor, visible);
+        }
+
         int start;
         int end;
 
         @Override
         protected void onMethodEnter() {
             super.onMethodEnter();
+            if (!inject) {
+                return;
+            }
 
 //        LINENUMBER 17 L0
 //        INVOKESTATIC java/lang/System.currentTimeMillis ()J
@@ -113,7 +129,9 @@ public class MainEntry {
         @Override
         protected void onMethodExit(int opcode) {
             super.onMethodExit(opcode);
-
+            if (!inject) {
+                return;
+            }
 
 //        LINENUMBER 19 L2
 //        INVOKESTATIC java/lang/System.currentTimeMillis ()J
@@ -151,7 +169,7 @@ public class MainEntry {
 //            INVOKEVIRTUAL java/lang/StringBuilder.toString ()Ljava/lang/String;
 //            INVOKEVIRTUAL java/io/PrintStream.println (Ljava/lang/String;)V
 
-            visitFieldInsn(Opcodes.GETSTATIC, "java/lang/System","out", "Ljava/io/PrintStream;");
+            visitFieldInsn(Opcodes.GETSTATIC, "java/lang/System", "out", "Ljava/io/PrintStream;");
             newInstance(Type.getType("Ljava/lang/StringBuilder;"));
             dup();
             invokeConstructor(Type.getType("Ljava/lang/StringBuilder;"), new Method("<init>", "()V"));
