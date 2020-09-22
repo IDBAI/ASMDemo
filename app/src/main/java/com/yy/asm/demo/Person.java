@@ -12,7 +12,7 @@ package com.yy.asm.demo;
  */
 public class Person {
 
-    void main() {
+    public static void main(String[] args) {
         Person person = new Person();
         person.talk();
 
@@ -26,3 +26,20 @@ public class Person {
         return c;
     }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

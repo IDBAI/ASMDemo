@@ -34,4 +34,6 @@ dependencies {
     androidTestImplementation 'androidx.test.ext:junit:1.1.2'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
 
+    testImplementation 'org.ow2.asm:asm:9.0'
+    testImplementation 'org.ow2.asm:asm-commons:9.0'
 }

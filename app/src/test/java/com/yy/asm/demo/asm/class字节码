@@ -1,0 +1,64 @@
+// class version 51.0 (51)
+// access flags 0x21
+public class com/yy/asm/demo/asm/InjectClass {
+
+  // compiled from: InjectClass.java
+
+  // access flags 0x1
+  public <init>()V
+   L0
+    LINENUMBER 13 L0
+    ALOAD 0
+    INVOKESPECIAL java/lang/Object.<init> ()V
+    RETURN
+   L1
+    LOCALVARIABLE this Lcom/yy/asm/demo/asm/InjectClass; L0 L1 0
+    MAXSTACK = 1
+    MAXLOCALS = 1
+
+  // access flags 0x2
+  private processData()V throws java/lang/InterruptedException
+  @Lcom/yy/asm/demo/asm/TimeCost;() // invisible
+   L0
+    LINENUMBER 17 L0
+    INVOKESTATIC java/lang/System.currentTimeMillis ()J
+    LSTORE 1
+   L1
+    LINENUMBER 18 L1
+    LDC 2000
+    INVOKESTATIC java/lang/Thread.sleep (J)V
+   L2
+    LINENUMBER 19 L2
+    INVOKESTATIC java/lang/System.currentTimeMillis ()J
+    LSTORE 3
+   L3
+    LINENUMBER 20 L3
+    LLOAD 3
+    LLOAD 1
+    LSUB
+    LSTORE 5
+   L4
+    LINENUMBER 21 L4
+    GETSTATIC java/lang/System.out : Ljava/io/PrintStream;
+    NEW java/lang/StringBuilder
+    DUP
+    INVOKESPECIAL java/lang/StringBuilder.<init> ()V
+    LDC "processData cost time : "
+    INVOKEVIRTUAL java/lang/StringBuilder.append (Ljava/lang/String;)Ljava/lang/StringBuilder;
+    LLOAD 5
+    INVOKEVIRTUAL java/lang/StringBuilder.append (J)Ljava/lang/StringBuilder;
+    LDC " ms"
+    INVOKEVIRTUAL java/lang/StringBuilder.append (Ljava/lang/String;)Ljava/lang/StringBuilder;
+    INVOKEVIRTUAL java/lang/StringBuilder.toString ()Ljava/lang/String;
+    INVOKEVIRTUAL java/io/PrintStream.println (Ljava/lang/String;)V
+   L5
+    LINENUMBER 22 L5
+    RETURN
+   L6
+    LOCALVARIABLE this Lcom/yy/asm/demo/asm/InjectClass; L0 L6 0
+    LOCALVARIABLE start J L1 L6 1
+    LOCALVARIABLE end J L3 L6 3
+    LOCALVARIABLE interval J L4 L6 5
+    MAXSTACK = 4
+    MAXLOCALS = 7
+}

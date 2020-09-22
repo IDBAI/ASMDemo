@@ -1,18 +1,23 @@
-public class com.yy.asm.demo.Person {
-  public com.yy.asm.demo.Person();
-    Code:
-       0: aload_0
-       1: invokespecial #1                  // Method java/lang/Object."<init>":()V
-       4: return
 
-  void main();
-    Code:
-       0: new           #7                  // class com/yy/asm/demo/Person
-       3: dup
-       4: invokespecial #9                  // Method "<init>":()V
-       7: astore_1
-       8: aload_1
-       9: invokevirtual #10                 // Method talk:()I
-      12: pop
-      13: return
-}
+
+ private talk()I
+   L0
+    LINENUMBER 23 L0
+    BIPUSH 10  //将int型10入操作数栈
+    ISTORE 1  //将操作数栈中栈顶的int型数值，存入局部变量表（下标为1的位置）
+   L1
+    LINENUMBER 24 L1
+    BIPUSH 20 //将int型20入操作数栈
+    ISTORE 2 //将操作数栈中栈顶的int型数值，存入局部变量表（下标为2的位置）
+   L2
+    LINENUMBER 25 L2
+    ILOAD 1  // 将局部变量表中下标为1的int型数据入栈
+    ILOAD 2  // 将局部变量表中下标为2的int型数据入栈
+    IADD    //1.将栈顶两个int型数据出栈，2.两数相加 3.将结果压入操作数栈
+    BIPUSH 10   //10的值，扩展成int型数值，压入操作数栈
+    IMUL        //1.将栈顶的两个数出栈，2.相乘 3.将结果压入操作数栈
+    ISTORE 3    //将操作数栈中栈顶的int型数值，存入局部变量表（下标为3的位置）
+   L3
+    LINENUMBER 26 L3
+    ILOAD 3  // 将局部变量表中下标为3的int型数据入栈
+    IRETURN  // 返回int数据类型
