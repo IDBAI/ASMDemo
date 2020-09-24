@@ -29,7 +29,7 @@ public class MainEntry {
             "/Users/dw/StudioProjects/Demo/ASMDemo/app/src/test/java/com/yy/asm/demo/asm/InjectClass.class";
 
     static String outputClass =
-            "/Users/dw/StudioProjects/Demo/ASMDemo/app/src/test/java/com/yy/asm/demo/target/InjectClass2.class";
+            "/Users/dw/StudioProjects/Demo/ASMDemo/app/src/test/java/com/yy/asm/demo/asm/InjectClass.class";
 
     /****
      * ASM 7.x 版本不支持 jdk8 编译的class文件读取
@@ -40,6 +40,11 @@ public class MainEntry {
         try {
 
             FileInputStream fileInputStream = new FileInputStream(inputClass);
+
+
+
+
+
 
             ClassReader classReader = new ClassReader(fileInputStream);
             ClassWriter classWriter = new ClassWriter(ClassWriter.COMPUTE_FRAMES);
@@ -94,10 +99,13 @@ public class MainEntry {
 
         boolean inject = false;
 
+
+
         @Override
         public AnnotationVisitor visitAnnotation(String descriptor, boolean visible) {
 
             System.out.println(getName() +" -> "+descriptor);
+
             if ("Lcom/yy/asm/demo/asm/TimeCost;".equals(descriptor)) {
                 inject = true;
             }
@@ -110,79 +118,47 @@ public class MainEntry {
 
         @Override
         protected void onMethodEnter() {
-            super.onMethodEnter();
             if (!inject) {
                 return;
             }
 
-//        LINENUMBER 17 L0
-//        INVOKESTATIC java/lang/System.currentTimeMillis ()J
-//        LSTORE 1
+            visitMethodInsn(INVOKESTATIC, "java/lang/System", "currentTimeMillis", "()J", false);
+            visitVarInsn(LSTORE, 1);
 
-            invokeStatic(Type.getType("Ljava/lang/System;"), new Method("currentTimeMillis", "()J"));
-            start = newLocal(Type.LONG_TYPE);
-            storeLocal(start);
+
 
         }
 
 
         @Override
         protected void onMethodExit(int opcode) {
-            super.onMethodExit(opcode);
             if (!inject) {
                 return;
             }
 
-//        LINENUMBER 19 L2
-//        INVOKESTATIC java/lang/System.currentTimeMillis ()J
-//        LSTORE 3
-
-            invokeStatic(Type.getType("Ljava/lang/System;"), new Method("currentTimeMillis", "()J"));
-            end = newLocal(Type.LONG_TYPE);
-            storeLocal(end);
-
-//        LINENUMBER 20 L3
-//        LLOAD 3
-//        LLOAD 1
-//        LSUB
-//        LSTORE 5
-
-            loadLocal(end);
-            loadLocal(start);
-            math(SUB, Type.LONG_TYPE);
-
-            int local = newLocal(Type.LONG_TYPE);
-            storeLocal(local);
-
-
-//            LINENUMBER 21 L4
-//            GETSTATIC java/lang/System.out : Ljava/io/PrintStream;
-//            NEW java/lang/StringBuilder
-//            DUP
-//            INVOKESPECIAL java/lang/StringBuilder.<init> ()V
-//            LDC "processData cost time : "
-//            INVOKEVIRTUAL java/lang/StringBuilder.append (Ljava/lang/String;)Ljava/lang/StringBuilder;
-//            LLOAD 5
-//            INVOKEVIRTUAL java/lang/StringBuilder.append (J)Ljava/lang/StringBuilder;
-//            LDC " ms"
-//            INVOKEVIRTUAL java/lang/StringBuilder.append (Ljava/lang/String;)Ljava/lang/StringBuilder;
-//            INVOKEVIRTUAL java/lang/StringBuilder.toString ()Ljava/lang/String;
-//            INVOKEVIRTUAL java/io/PrintStream.println (Ljava/lang/String;)V
-
-            visitFieldInsn(Opcodes.GETSTATIC, "java/lang/System", "out", "Ljava/io/PrintStream;");
-            newInstance(Type.getType("Ljava/lang/StringBuilder;"));
-            dup();
-            invokeConstructor(Type.getType("Ljava/lang/StringBuilder;"), new Method("<init>", "()V"));
+//            visitLdcInsn(new Long(2000L));
+//            visitMethodInsn(INVOKESTATIC, "java/lang/Thread", "sleep", "(J)V", false);
+            visitMethodInsn(INVOKESTATIC, "java/lang/System", "currentTimeMillis", "()J", false);
+            visitVarInsn(LSTORE, 3);
+            visitVarInsn(LLOAD, 3);
+            visitVarInsn(LLOAD, 1);
+            visitInsn(LSUB);
+            visitVarInsn(LSTORE, 5);
+            visitFieldInsn(GETSTATIC, "java/lang/System", "out", "Ljava/io/PrintStream;");
+            visitTypeInsn(NEW, "java/lang/StringBuilder");
+            visitInsn(DUP);
+            visitMethodInsn(INVOKESPECIAL, "java/lang/StringBuilder", "<init>", "()V", false);
             visitLdcInsn("processData cost time : ");
-            invokeVirtual(Type.getType("Ljava/lang/StringBuilder;"), new Method("append", "(Ljava/lang/String;)Ljava/lang/StringBuilder;"));
-            loadLocal(local);
-            invokeVirtual(Type.getType("Ljava/lang/StringBuilder;"), new Method("append", "(J)Ljava/lang/StringBuilder;"));
+            visitMethodInsn(INVOKEVIRTUAL, "java/lang/StringBuilder", "append", "(Ljava/lang/String;)Ljava/lang/StringBuilder;", false);
+            visitVarInsn(LLOAD, 5);
+            visitMethodInsn(INVOKEVIRTUAL, "java/lang/StringBuilder", "append", "(J)Ljava/lang/StringBuilder;", false);
             visitLdcInsn(" ms");
-
-            invokeVirtual(Type.getType("Ljava/lang/StringBuilder;"), new Method("append", "(Ljava/lang/String;)Ljava/lang/StringBuilder;"));
-            invokeVirtual(Type.getType("Ljava/lang/StringBuilder;"), new Method("toString", "()Ljava/lang/String;"));
-            invokeVirtual(Type.getType("Ljava/io/PrintStream;"), new Method("println", "(Ljava/lang/Object;)V"));
-
+            visitMethodInsn(INVOKEVIRTUAL, "java/lang/StringBuilder", "append", "(Ljava/lang/String;)Ljava/lang/StringBuilder;", false);
+            visitMethodInsn(INVOKEVIRTUAL, "java/lang/StringBuilder", "toString", "()Ljava/lang/String;", false);
+            visitMethodInsn(INVOKEVIRTUAL, "java/io/PrintStream", "println", "(Ljava/lang/String;)V", false);
+//            visitInsn(RETURN);
+//            visitMaxs(4, 7);
+//            visitEnd();
         }
     }
 

@@ -13,11 +13,18 @@ package com.yy.asm.demo.asm;
 public class InjectClass {
 
     @TimeCost
-    private void processData() throws InterruptedException {
+    public void processData() throws InterruptedException {
 //        long start = System.currentTimeMillis();
         Thread.sleep(2000);
 //        long end = System.currentTimeMillis();
 //        long interval = end - start;
 //        System.out.println("processData cost time : " + interval + " ms");
     }
+
+
+    public void test() {
+
+    }
+
+
 }
