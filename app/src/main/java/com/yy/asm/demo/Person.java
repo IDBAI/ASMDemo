@@ -19,6 +19,7 @@ public class Person {
     }
 
 
+    @TimeCost
     private int talk() {
         int a = 10;
         int b = 20;
