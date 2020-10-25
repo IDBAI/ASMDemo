@@ -1,0 +1,28 @@
+apply plugin : 'groovy'
+apply plugin : 'maven'
+
+dependencies {
+    implementation fileTree(dir: 'libs', includes: ['*.jar'])
+
+    implementation gradleApi()
+    implementation localGroovy()
+
+    implementation 'com.android.tools.build:gradle:4.1.0'
+
+    //ASM 相关依赖
+    implementation 'org.ow2.asm:asm:9.0'
+    implementation 'org.ow2.asm:asm-commons:9.0'
+}
+
+group='com.bamboo.canary'
+version='1.0.0-SNAPSHOT'
+
+
+//配置仓库信息
+uploadArchives{
+    repositories {
+        mavenDeployer {
+            repository(url:uri('../asm_canary'))
+        }
+    }
+}

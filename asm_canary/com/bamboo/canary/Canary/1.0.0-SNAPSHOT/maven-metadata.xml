@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<metadata modelVersion="1.1.0">
+  <groupId>com.bamboo.canary</groupId>
+  <artifactId>Canary</artifactId>
+  <version>1.0.0-SNAPSHOT</version>
+  <versioning>
+    <snapshot>
+      <timestamp>20201025.105539</timestamp>
+      <buildNumber>3</buildNumber>
+    </snapshot>
+    <lastUpdated>20201025105539</lastUpdated>
+    <snapshotVersions>
+      <snapshotVersion>
+        <extension>jar</extension>
+        <value>1.0.0-20201025.105539-3</value>
+        <updated>20201025105539</updated>
+      </snapshotVersion>
+      <snapshotVersion>
+        <extension>pom</extension>
+        <value>1.0.0-20201025.105539-3</value>
+        <updated>20201025105539</updated>
+      </snapshotVersion>
+    </snapshotVersions>
+  </versioning>
+</metadata>
