@@ -20,7 +20,7 @@ public class Person {
 
 
     @TimeCost
-    private int talk() {
+    public int talk() {
         int a = 10;
         int b = 20;
         int c = (a + b) * 10;
