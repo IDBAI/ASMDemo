@@ -20,11 +20,21 @@ public class Person {
 
 
     @TimeCost
-    public int talk() {
-        int a = 10;
-        int b = 20;
-        int c = (a + b) * 10;
-        return c;
+    public void talk() {
+        System.out.println("hello man");
+    }
+
+
+    @TimeCost
+    public int doSomething() {
+        System.out.println("i am doing");
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+        return 100;
     }
 }
 

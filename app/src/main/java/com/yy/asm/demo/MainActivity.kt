@@ -21,5 +21,6 @@ class MainActivity : AppCompatActivity() {
 
         val person = Person()
         person.talk()
+        person.doSomething()
     }
 }
