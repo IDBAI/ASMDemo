@@ -39,7 +39,6 @@ public class JarUtils {
             jos.putNextEntry(entry);
             byte[] temp ;
             if(name.equals(entryName)){
-                //覆盖
                 temp = data;
                 has = true ;
             }else{
