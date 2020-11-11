@@ -18,5 +18,12 @@ class CanaryPlugin implements Plugin<Project> {
 
         println '===================CanaryPlugin end======================'
 
+        println 'start insert task'
+        project.tasks.create("loggerTask", LoggerTask.class)
+        project.afterEvaluate {
+            def preBuild = project.tasks.getByName("preBuild")
+            preBuild.dependsOn project.tasks.getByName("loggerTask")
+        }
+
     }
 }
