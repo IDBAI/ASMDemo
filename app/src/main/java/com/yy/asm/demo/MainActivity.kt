@@ -26,7 +26,7 @@ class MainActivity : AppCompatActivity() {
         person.doSomething()
 
         findViewById<TextView>(R.id.click_me).setOnClickListener{
-            DoReport.report("上报信息")
+            DoReport.report("MainActivity -> 上报信息")
         }
     }
 }

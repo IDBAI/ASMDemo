@@ -8,27 +8,27 @@ import org.objectweb.asm.commons.AdviceAdapter
 /***
  * 分析器
  */
-class MyClassVisitor extends ClassVisitor {
+class TimeCostClassVisitor extends ClassVisitor {
 
-    MyClassVisitor(int api, ClassVisitor classVisitor) {
+    TimeCostClassVisitor(int api, ClassVisitor classVisitor) {
         super(api, classVisitor)
     }
 
     @Override
     MethodVisitor visitMethod(int access, String name, String descriptor, String signature, String[] exceptions) {
         MethodVisitor method = super.visitMethod(access, name, descriptor, signature, exceptions)
-        return new MyMethodVisitor(api, method, access, name, descriptor)
+        return new TimeCostMethodVisitor(api, method, access, name, descriptor)
     }
 
 
 /***
  * 方法访问器
  */
-    static class MyMethodVisitor extends AdviceAdapter {
+    static class TimeCostMethodVisitor extends AdviceAdapter {
         private static final String TAG = "MyMethodVisitor"
         private static final String ANNOTATION_TIME_COST = "Lcom/yy/asm/demo/TimeCost;"
 
-        protected MyMethodVisitor(int api, MethodVisitor methodVisitor, int access, String name, String descriptor) {
+        protected TimeCostMethodVisitor(int api, MethodVisitor methodVisitor, int access, String name, String descriptor) {
             super(api, methodVisitor, access, name, descriptor)
         }
 

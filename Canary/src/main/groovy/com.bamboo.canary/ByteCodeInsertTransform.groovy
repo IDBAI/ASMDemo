@@ -11,16 +11,18 @@ import com.android.build.api.transform.TransformInput
 import com.android.build.api.transform.TransformOutputProvider
 import com.android.build.gradle.internal.pipeline.TransformManager
 import com.android.utils.FileUtils
-import com.bamboo.canary.asm.MyClassVisitor
+import com.bamboo.canary.asm.CrashLibFixedClassVisitor
+import com.bamboo.canary.asm.JarUtils
+import com.bamboo.canary.asm.TimeCostClassVisitor
 import groovy.io.FileType
 import org.apache.commons.codec.digest.DigestUtils
-import org.objectweb.asm.AnnotationVisitor
 import org.objectweb.asm.ClassReader
-import org.objectweb.asm.ClassVisitor
 import org.objectweb.asm.ClassWriter
-import org.objectweb.asm.MethodVisitor
 import org.objectweb.asm.Opcodes
-import org.objectweb.asm.commons.AdviceAdapter
+
+import java.util.jar.JarEntry
+import java.util.jar.JarFile
+import java.util.jar.JarOutputStream
 
 class ByteCodeInsertTransform extends Transform {
 
@@ -86,7 +88,7 @@ class ByteCodeInsertTransform extends Transform {
                                 ClassWriter classWriter = new ClassWriter(ClassWriter.COMPUTE_FRAMES);
 
                                 //开始插桩
-                                classReader.accept(new MyClassVisitor(Opcodes.ASM7, classWriter), ClassReader.EXPAND_FRAMES);
+                                classReader.accept(new TimeCostClassVisitor(Opcodes.ASM7, classWriter), ClassReader.EXPAND_FRAMES)
 
                                 byte[] bytes = classWriter.toByteArray();
 
@@ -109,11 +111,12 @@ class ByteCodeInsertTransform extends Transform {
 
                 def md5Name = DigestUtils.md5Hex(jarInput.file.getAbsolutePath())
                 if (jarName.endsWith('.jar')) {
-                    jarName = jarName.substring(0, jarName.length() - 4)
+                    jarName = jarName + md5Name
                 }
 
+                fixedCrashLibNPException(jarInput)
+
                 def dest = outputProvider.getContentLocation(jarName + md5Name, jarInput.contentTypes, jarInput.scopes, Format.JAR)
-                //TODO byte Code insert with jar
                 println TAG + ' dest -> ' + dest
                 FileUtils.copyFile(jarInput.file, dest)
             }
@@ -123,5 +126,29 @@ class ByteCodeInsertTransform extends Transform {
 
     }
 
+    void fixedCrashLibNPException(JarInput jarInput ) {
+        if (jarInput.getName().contains("CashLib.jar")) {
+            File file = jarInput.getFile()
+            JarFile jar = new JarFile(file)
+            Enumeration<JarEntry> list =  jar.entries()
+            while (list.hasMoreElements()) {
+                JarEntry entry = list.nextElement()
+                if (entry.getName() == "com/bamboo/cashlib/DoReport.class") {
+                    InputStream ins = jar.getInputStream(entry)
+                    byte[] bytes = IOUtils.read(ins)
+                    ins.close()
+                    ClassReader reader =  new ClassReader(bytes)
+                    ClassWriter classWriter = new ClassWriter(ClassWriter.COMPUTE_FRAMES);
+                    reader.accept(new CrashLibFixedClassVisitor(Opcodes.ASM7,classWriter),ClassReader.EXPAND_FRAMES)
+                    byte[] outBytes = classWriter.toByteArray()
+                    JarUtils.writeJarFile(jarInput, entry.getName(), outBytes)
+
+                    FileOutputStream fo = new FileOutputStream(new File("D:\\AndroidWork\\ASMDemo\\Canary\\fixedNP\\DoReport.class"))
+                    fo.write(outBytes)
+                    fo.close()
+                }
+            }
+        }
+    }
 
 }
