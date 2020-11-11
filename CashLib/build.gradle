@@ -1,0 +1,31 @@
+plugins {
+    id 'java-library'
+}
+
+java {
+    sourceCompatibility = JavaVersion.VERSION_1_7
+    targetCompatibility = JavaVersion.VERSION_1_7
+}
+
+dependencies {
+    implementation 'com.google.code.gson:gson:2.8.6'
+}
+
+//Copy类型
+task makeJar(type: Copy) {
+    //删除存在的
+    delete 'build/libs/crashLib.jar'
+    //设置拷贝的文件
+    from('build/intermediates/bundles/default/')
+    //打进jar包后的文件目录
+    into('build/libs/')
+    //将classes.jar放入build/libs/目录下
+    //include ,exclude参数来设置过滤
+    //（我们只关心classes.jar这个文件）
+    include('classes.jar')
+
+    configurations { '/proguard-rules.pro' }
+    //重命名
+    rename('classes.jar', 'crashLib.jar')
+}
+makeJar.dependsOn(build)

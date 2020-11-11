@@ -1,7 +1,9 @@
 package com.yy.asm.demo
 
 import android.os.Bundle
+import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import com.bamboo.cashlib.DoReport
 
 /**
  *
@@ -22,5 +24,9 @@ class MainActivity : AppCompatActivity() {
         val person = Person()
         person.talk()
         person.doSomething()
+
+        findViewById<TextView>(R.id.click_me).setOnClickListener{
+            DoReport.report("上报信息")
+        }
     }
 }
