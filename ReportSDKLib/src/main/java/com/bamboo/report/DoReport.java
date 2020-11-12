@@ -1,4 +1,4 @@
-package com.bamboo.cashlib;
+package com.bamboo.report;
 
 public class DoReport {
     static Printer printer;

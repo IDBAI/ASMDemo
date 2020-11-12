@@ -15,14 +15,12 @@ import com.bamboo.canary.asm.CrashLibFixedClassVisitor
 import com.bamboo.canary.asm.JarUtils
 import com.bamboo.canary.asm.TimeCostClassVisitor
 import groovy.io.FileType
-import org.apache.commons.codec.digest.DigestUtils
 import org.objectweb.asm.ClassReader
 import org.objectweb.asm.ClassWriter
 import org.objectweb.asm.Opcodes
 
 import java.util.jar.JarEntry
 import java.util.jar.JarFile
-import java.util.jar.JarOutputStream
 
 class ByteCodeInsertTransform extends Transform {
 
@@ -57,11 +55,7 @@ class ByteCodeInsertTransform extends Transform {
 
             throws IOException, TransformException, InterruptedException {
         super.transform(context, inputs, referencedInputs, outputProvider, isIncremental)
-
-
         println TAG + '=======================transform called======================='
-
-
         inputs.each { TransformInput input ->
             input.directoryInputs.each { DirectoryInput directoryInput ->
                 //文件夹
@@ -80,27 +74,18 @@ class ByteCodeInsertTransform extends Transform {
                                     && "R.class" != name
                                     && "BuildConfig.class" != name) {
                                 println TAG + ' find class:' + name
-//                                ByteCodeInsert find class:Person.class
-//                                ByteCodeInsert find class:MainActivity.class
-
-
                                 ClassReader classReader = new ClassReader(file.bytes);
                                 ClassWriter classWriter = new ClassWriter(ClassWriter.COMPUTE_FRAMES);
-
                                 //开始插桩
                                 classReader.accept(new TimeCostClassVisitor(Opcodes.ASM7, classWriter), ClassReader.EXPAND_FRAMES)
 
-                                byte[] bytes = classWriter.toByteArray();
-
+                                byte[] bytes = classWriter.toByteArray()
                                 FileOutputStream fileOutputStream = new FileOutputStream(file.path)
                                 fileOutputStream.write(bytes)
                                 fileOutputStream.close()
-
                             }
                     }
                 }
-
-
                 FileUtils.copyDirectory(directoryInput.file, dest)
             }
 
@@ -108,32 +93,22 @@ class ByteCodeInsertTransform extends Transform {
                 //第三方jar
                 def jarName = jarInput.name
                 println TAG + ' jarName -> ' + jarName
-
-                def md5Name = DigestUtils.md5Hex(jarInput.file.getAbsolutePath())
-                if (jarName.endsWith('.jar')) {
-                    jarName = jarName + md5Name
-                }
-
                 fixedCrashLibNPException(jarInput)
-
-                def dest = outputProvider.getContentLocation(jarName + md5Name, jarInput.contentTypes, jarInput.scopes, Format.JAR)
-                println TAG + ' dest -> ' + dest
+                def dest = outputProvider.getContentLocation(jarName, jarInput.contentTypes, jarInput.scopes, Format.JAR)
                 FileUtils.copyFile(jarInput.file, dest)
             }
 
         }
-
-
     }
 
     void fixedCrashLibNPException(JarInput jarInput ) {
-        if (jarInput.getName().contains("CashLib.jar")) {
+        if (jarInput.getName().contains("ReportSDKLib.jar")) {
             File file = jarInput.getFile()
             JarFile jar = new JarFile(file)
             Enumeration<JarEntry> list =  jar.entries()
             while (list.hasMoreElements()) {
                 JarEntry entry = list.nextElement()
-                if (entry.getName() == "com/bamboo/cashlib/DoReport.class") {
+                if (entry.getName() == "com/bamboo/report/DoReport.class") {
                     InputStream ins = jar.getInputStream(entry)
                     byte[] bytes = IOUtils.read(ins)
                     ins.close()
@@ -143,7 +118,7 @@ class ByteCodeInsertTransform extends Transform {
                     byte[] outBytes = classWriter.toByteArray()
                     JarUtils.writeJarFile(jarInput, entry.getName(), outBytes)
 
-                    FileOutputStream fo = new FileOutputStream(new File("D:\\AndroidWork\\ASMDemo\\Canary\\fixedNP\\DoReport.class"))
+                    FileOutputStream fo = new FileOutputStream(new File("/Users/dw/StudioProjects/Demo/ASMDemo/Canary/fixedNP/DoReport.class"))
                     fo.write(outBytes)
                     fo.close()
                 }

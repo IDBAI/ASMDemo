@@ -1,9 +1,9 @@
 package com.yy.asm.demo
 
 import android.os.Bundle
-import android.widget.TextView
+import android.widget.Button
 import androidx.appcompat.app.AppCompatActivity
-import com.bamboo.cashlib.DoReport
+import com.bamboo.report.DoReport
 
 /**
  *
@@ -25,7 +25,7 @@ class MainActivity : AppCompatActivity() {
         person.talk()
         person.doSomething()
 
-        findViewById<TextView>(R.id.click_me).setOnClickListener{
+        findViewById<Button>(R.id.click_report).setOnClickListener {
             DoReport.report("MainActivity -> 上报信息")
         }
     }

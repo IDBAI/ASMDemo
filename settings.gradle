@@ -1,4 +1,4 @@
-include ':CashLib'
+include ':ReportSDKLib'
 include ':Canary'
 include ':app'
 rootProject.name = "ASMDemo"

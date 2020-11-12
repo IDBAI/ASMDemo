@@ -40,17 +40,15 @@ public class CrashLibFixedClassVisitor extends ClassVisitor {
         @Override
         protected void onMethodEnter() {
             super.onMethodEnter()
-
-            visitFieldInsn(GETSTATIC, "com/bamboo/cashlib/DoReport", "printer", "Lcom/bamboo/cashlib/Printer;");
+            println "================fixed NP success================"
+            visitFieldInsn(GETSTATIC, "com/bamboo/report/DoReport", "printer", "Lcom/bamboo/report/Printer;");
             Label label0 = new Label();
             visitJumpInsn(IFNONNULL, label0);
-            visitTypeInsn(NEW, "com/bamboo/cashlib/Printer");
+            visitTypeInsn(NEW, "com/bamboo/report/Printer");
             visitInsn(DUP);
-            visitMethodInsn(INVOKESPECIAL, "com/bamboo/cashlib/Printer", "<init>", "()V", false);
-            visitFieldInsn(PUTSTATIC, "com/bamboo/cashlib/DoReport", "printer", "Lcom/bamboo/cashlib/Printer;");
+            visitMethodInsn(INVOKESPECIAL, "com/bamboo/report/Printer", "<init>", "()V", false);
+            visitFieldInsn(PUTSTATIC, "com/bamboo/report/DoReport", "printer", "Lcom/bamboo/report/Printer;");
             visitLabel(label0);
-
-            println "================fixed NP success================"
         }
     }
 
