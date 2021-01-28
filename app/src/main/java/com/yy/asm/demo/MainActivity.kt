@@ -1,9 +1,11 @@
 package com.yy.asm.demo
 
+import android.content.Intent
 import android.os.Bundle
 import android.widget.Button
 import androidx.appcompat.app.AppCompatActivity
 import com.bamboo.report.DoReport
+import simple.SlingDemoActivity
 
 /**
  *
@@ -27,6 +29,9 @@ class MainActivity : AppCompatActivity() {
 
         findViewById<Button>(R.id.click_report).setOnClickListener {
             DoReport.report("MainActivity -> 上报信息")
+        }
+        findViewById<Button>(R.id.goto_sling).setOnClickListener {
+            startActivity(Intent(this, SlingDemoActivity::class.java))
         }
     }
 }
