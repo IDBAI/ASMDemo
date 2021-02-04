@@ -4,6 +4,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.widget.Button
 import androidx.appcompat.app.AppCompatActivity
+import simple.HollowActivity
 import simple.SlingDemoActivity
 
 /**
@@ -27,6 +28,7 @@ class MainActivity : AppCompatActivity() {
         person.doSomething()
 
         findViewById<Button>(R.id.click_report).setOnClickListener {
+            startActivity(Intent(this, HollowActivity::class.java))
         }
         findViewById<Button>(R.id.goto_sling).setOnClickListener {
             startActivity(Intent(this, SlingDemoActivity::class.java))

@@ -7,4 +7,7 @@
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
+    <declare-styleable name="MaskPierceView">
+        <attr name="maskColor" format="color"/>
+    </declare-styleable>
 </resources>
