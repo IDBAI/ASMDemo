@@ -10,9 +10,11 @@
 
     <View
         android:id="@+id/seat_second"
+        android:layout_marginLeft="300dp"
         android:layout_width="100px"
         android:layout_height="100px"
-        android:layout_gravity="right" />
+        android:background="@color/colorPrimary"
+        android:layout_marginTop="200dp"/>
 
     <View
         android:layout_width="150px"

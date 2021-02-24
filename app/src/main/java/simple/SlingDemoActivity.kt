@@ -13,13 +13,17 @@ import android.util.DisplayMetrics
 import android.util.Log
 import android.view.View
 import android.view.ViewConfiguration
+import android.view.ViewPropertyAnimator
 import android.view.WindowManager
 import android.view.animation.AccelerateInterpolator
+import android.view.animation.Animation
 import android.view.animation.DecelerateInterpolator
 import android.widget.Button
 import android.widget.FrameLayout
 import android.widget.ImageView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.marginLeft
+import androidx.core.view.marginTop
 import com.yy.asm.demo.R
 
 /**
@@ -47,7 +51,11 @@ class SlingDemoActivity : AppCompatActivity() {
             val imageView = ImageView(this.applicationContext)
             imageView.setImageResource(R.drawable.ic_launcher_background)
             val layoutParams = FrameLayout.LayoutParams(SIZE, SIZE)
+            layoutParams.leftMargin = 300
+            layoutParams.topMargin = 500
             imageView.layoutParams = layoutParams
+
+            imageView.layout(300, 500, 0, 0)
             root.addView(imageView)
             start(imageView)
         }
@@ -62,33 +70,39 @@ class SlingDemoActivity : AppCompatActivity() {
 
         val startX = targetView.x
         val startY = targetView.y
+        val left = targetView.left
+        val top = targetView.top
+
 
         val screenSize = ScreenUtils.getScreenSize(this)
         val measuredWidth = targetView.measuredWidth
         val measuredHeight = targetView.measuredHeight
 
+        Log.i("TAG", "left :$left")
+        Log.i("TAG", "top :$top")
+        Log.i("TAG", "startX :$startX")
+        Log.i("TAG", "startY :$startY")
         Log.i("TAG", "measuredWidth :$measuredWidth")
         Log.i("TAG", "measuredHeight :$measuredHeight")
         val centerX = (screenSize[0] / 2.0f) - (SIZE * 1.0f) / 2.0f
         val centerY = (screenSize[1] / 2.0f) - (SIZE * 1.0f) / 2.0f
 
 
-        val ofFloatX = ObjectAnimator.ofFloat(targetView, "translationX", startX, centerX)
-        val ofFloatY = ObjectAnimator.ofFloat(targetView, "translationY", startY, centerY)
-        val scaleX = ObjectAnimator.ofFloat(targetView, "scaleX", 1.0f, 1.5f)
-        val scaleY = ObjectAnimator.ofFloat(targetView, "scaleY", 1.0f, 1.5f)
+        val animate = targetView.animate()
+        animate.translationXBy(centerX - startX)
+            .translationYBy(centerY - startY)
+            .scaleXBy(0.5f)
+            .scaleYBy(0.5f)
+            .setInterpolator(DecelerateInterpolator())
+            .setDuration(800)
+            .setListener(object : AnimatorListenerAdapter() {
+                override fun onAnimationEnd(animation: Animator?) {
+                    super.onAnimationEnd(animation)
+                    end(targetView)
+                }
+            })
+            .start()
 
-        val animatorSet = AnimatorSet()
-        animatorSet.playTogether(ofFloatX, ofFloatY, scaleX, scaleY)
-        animatorSet.duration = 800
-        animatorSet.interpolator = DecelerateInterpolator()
-        animatorSet.start()
-        animatorSet.addListener(object : AnimatorListenerAdapter() {
-            override fun onAnimationEnd(animation: Animator?, isReverse: Boolean) {
-                super.onAnimationEnd(animation, isReverse)
-                end(targetView)
-            }
-        })
     }
 
 
@@ -100,22 +114,27 @@ class SlingDemoActivity : AppCompatActivity() {
         val centerX = targetView.x
         val centerY = targetView.y
 
-        val ofFloatX = ObjectAnimator.ofFloat(targetView, "translationX", centerX, endX)
-        val ofFloatY = ObjectAnimator.ofFloat(targetView, "translationY", centerY, endY)
-        val scaleX = ObjectAnimator.ofFloat(targetView, "scaleX", 1.5f, 1.0f)
-        val scaleY = ObjectAnimator.ofFloat(targetView, "scaleY", 1.5f, 1.0f)
+        Log.i("TAGEND", "endX $endX")//900
+        Log.i("TAGEND", "endY $endY")
+        Log.i("TAGEND", "centerX $centerX")//490
+        Log.i("TAGEND", "centerY $centerY")
 
-        val animatorSet = AnimatorSet()
-        animatorSet.playTogether(ofFloatX, ofFloatY, scaleX, scaleY)
-        animatorSet.duration = 800
-        animatorSet.interpolator = AccelerateInterpolator()
-        animatorSet.start()
-        animatorSet.addListener(object : AnimatorListenerAdapter() {
-            override fun onAnimationEnd(animation: Animator?, isReverse: Boolean) {
-                super.onAnimationEnd(animation, isReverse)
-                root.removeView(targetView)
-            }
-        })
+
+        val animate = targetView.animate()
+        animate.translationXBy(endX - centerX)
+            .translationYBy(endY - centerY)
+            .scaleXBy(-0.5f)
+            .scaleYBy(-0.5f)
+            .setInterpolator(AccelerateInterpolator())
+            .setDuration(800)
+            .setListener(object : AnimatorListenerAdapter() {
+                override fun onAnimationEnd(animation: Animator?) {
+                    super.onAnimationEnd(animation)
+                    root.removeView(targetView)
+                }
+            })
+            .start()
+
     }
 
 
